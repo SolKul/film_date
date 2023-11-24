@@ -160,6 +160,11 @@ class ImageDateQuestioner:
         record_memo(self.path_memo, self.path_dir)
         return folder_date_repr
 
+    @classmethod
+    def ask_gen_folder_date_cm(cls, path_dir: Path, path_memo: Path, sort_dir: str = "asc"):
+        im_date_questioner = cls(path_dir=path_dir, path_memo=path_memo, sort_dir=sort_dir)
+        return im_date_questioner.ask_and_gen_folder_date()
+
 
 def show_date_im(path_file):
     # ファイルパスの画像について、日付部分を表示する

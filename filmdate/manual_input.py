@@ -154,6 +154,7 @@ class ImageDateQuestioner:
         return folder_date_repr
 
     def ask_and_gen_folder_date(self):
+        self.file_date_list: list[common_dataclass.FileDate] = []
         self.ask_file_date_list()
         folder_date_repr = self.gen_folder_date()
         record_memo(self.path_memo, self.path_dir)

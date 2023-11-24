@@ -29,11 +29,13 @@ def record_memo(path_memo, path_dir):
 
 
 class ImageDateQuestioner:
-    def __init__(self, path_dir: Path, path_memo: Path):
+    def __init__(self, path_dir: Path, path_memo: Path, sort_dir: str = "asc"):
         self.path_dir = Path(path_dir)
         path_file_list = list(self.path_dir.glob("*.jpg"))
         # フォルダ内のファイルについてファイル名でソートする
         self.path_file_list_sorted = sorted(path_file_list, key=lambda x: x.name)
+        if sort_dir == "desc":
+            self.path_file_list_sorted = self.path_file_list_sorted[::-1]
         self.file_date_list: list[common_dataclass.FileDate] = []
         self.path_memo = Path(path_memo)
         if not self.path_memo.exists():

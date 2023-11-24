@@ -168,9 +168,9 @@ class ImageDateQuestioner:
 
 def show_date_im(path_file):
     # ファイルパスの画像について、日付部分を表示する
-    fig, axes = plt.subplots(2, 2, figsize=(15, 6))
+    fig, axes = plt.subplots(2, 2, figsize=(20, 6))
     image = cv2.imread(str(path_file))
-    date_im = image[1300:, 1650:]
+    date_im = image[1300:, 1450:-100]
     impro.imshow(date_im, ax=axes[0, 0])
     axes[0, 0].axis("off")
     date_im_np_reverse = cv2.bitwise_not(date_im)
@@ -178,12 +178,13 @@ def show_date_im(path_file):
     axes[0, 1].axis("off")
 
     image = cv2.rotate(image, cv2.ROTATE_180)
-    date_im = image[1300:, 1650:]
+    date_im = image[1300:, 1450:-100]
     impro.imshow(date_im, ax=axes[1, 0])
     axes[1, 0].axis("off")
     date_im_np_reverse = cv2.bitwise_not(date_im)
     impro.imshow(date_im_np_reverse, ax=axes[1, 1])
     axes[1, 1].axis("off")
+
     plt.show()
 
 

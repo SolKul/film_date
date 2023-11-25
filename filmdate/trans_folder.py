@@ -25,8 +25,7 @@ class FolderFileDatetimeCalculator:
         # ソート後に撮影日時を決定することで、
         # 撮影日時が重複しないようになる
         num_file = len(folder_date_repr_sorted)
-        self.prev_date_day = None
-        self.prev_datetime_original = None
+        self.datetime_original_prev = None
         self.file_datetime_orig_list = []
         for i in range(num_file):
             folder_date_repr = folder_date_repr_sorted[i]
@@ -46,24 +45,24 @@ class FolderFileDatetimeCalculator:
 
     def decide_datetime_original(self, day_inputed: pd.Timestamp) -> pd.Timestamp:
         """撮影日時を決定する"""
-        if self.prev_datetime_original is None:
+        if self.datetime_original_prev is None:
             # self.datetime_original_prevが設定されていなければ
             # day_inputedの12:00を撮影日時とする
             time_to_set = dt.time(12, 0)
             datetime_original: pd.Timestamp = pd.Timestamp.combine(day_inputed, time_to_set)
             self.datetime_original_prev = datetime_original
         else:
-            # self.prev_datetime_originalが設定されていれば
+            # self.datetime_original_prevが設定されていれば
             day_prev = self.datetime_original_prev.floor("D")
             if day_inputed == day_prev:
                 # day_inputedが
-                # self.prev_datetime_originalの日付と同日なら、
-                # self.prev_datetime_originalの1分後を撮影日時とする
+                # self.datetime_original_prevの日付と同日なら、
+                # self.datetime_original_prevの1分後を撮影日時とする
                 datetime_original = self.datetime_original_prev + pd.Timedelta(minutes=1)
-                self.prev_datetime_original = datetime_original
+                self.datetime_original_prev = datetime_original
             else:
                 # day_inputedが
-                # self.prev_datetime_originalの日付と同日でないなら、
+                # self.datetime_original_prevの日付と同日でないなら、
                 # day_inputedの12:00を撮影日時とする
                 time_to_set = dt.time(12, 0)
                 datetime_original: pd.Timestamp = pd.Timestamp.combine(day_inputed, time_to_set)

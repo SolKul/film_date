@@ -214,23 +214,19 @@ def append_folder_date_list(
             folder_date_list.append(folder_date_repr)
 
 
-def update_exif(file_datetime_orig_list, path_rec_date_memo):
-    for file_datetime in file_datetime_orig_list:
-        path_file = file_datetime.path_file
-        image = Image.open(path_file)
-        exif_dict = piexif.load(image.info["exif"])
+def update_exif(path_file: Path, datetime_orig: pd.Timestamp):
+    # 指定したpath_fileのファイルについて
+    # original_date(撮影日時)を指定されたdatetime_origに更新して保存する
+    image_pil = Image.open(path_file)
+    exif_dict = piexif.load(image_pil.info["exif"])
 
-        # 撮影日情報をExifに格納
-        str_datetime = file_datetime.datetime_orig.strftime("%Y:%m:%d %H:%M:%S")
-        exif_dict["Exif"][36867] = str_datetime.encode("utf8")
+    # 撮影日情報をExifに格納
+    str_datetime = datetime_orig.strftime("%Y:%m:%d %H:%M:%S")
+    exif_dict["Exif"][36867] = str_datetime.encode("utf8")
 
-        # Exifを元ファイルに上書き
-        exif_byte = piexif.dump(exif_dict)
-        piexif.insert(exif_byte, str(path_file))
-    path_file
-    with open(path_rec_date_memo, mode="a") as f:
-        str_parent = str(path_file.parent)
-        f.write(f"{str_parent}\n")
+    # Exifを元ファイルに上書き
+    exif_byte = piexif.dump(exif_dict)
+    piexif.insert(exif_byte, str(path_file))
 
 
 def ext_orig_datetime_str(path_file):

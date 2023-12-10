@@ -54,3 +54,9 @@ class FolderDateRepresentative:
 class FileDatetimeOriginal:
     file_date: FileDate
     datetime_orig: pd.Timestamp
+
+
+@dataclass
+class FolderDatetimeOriginal:
+    folder_date_repr: FolderDateRepresentative
+    file_date_orig_list: list[FileDatetimeOriginal]

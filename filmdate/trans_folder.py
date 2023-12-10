@@ -26,22 +26,29 @@ class FolderFileDatetimeCalculator:
         # 撮影日時が重複しないようになる
         num_file = len(folder_date_repr_sorted)
         self.datetime_original_prev = None
-        self.file_datetime_orig_list = []
+        folder_date_orig_list = []
         for i in range(num_file):
             folder_date_repr = folder_date_repr_sorted[i]
             file_date_list = folder_date_repr.file_date_list
             # FileDateのリストそれぞれについて、撮影日時を決定する
-            self.calc_datetime_file_list(file_date_list)
-        return self.file_datetime_orig_list
+            file_datetime_orig_list = self.calc_datetime_file_list(file_date_list)
+            folder_date_orig_list.append(
+                common_dataclass.FolderDatetimeOriginal(
+                    folder_date_repr=folder_date_repr, file_date_orig_list=file_datetime_orig_list
+                )
+            )
+        return folder_date_orig_list
 
     def calc_datetime_file_list(self, file_date_list: list[common_dataclass.FileDate]):
         num_file = len(file_date_list)
+        file_datetime_orig_list = []
         for i in range(num_file):
             file_date = file_date_list[i]
             date_tmp_day = file_date.date.floor("D")
             datetime_original = self.decide_datetime_original(date_tmp_day)
             file_datetime = common_dataclass.FileDatetimeOriginal(file_date, datetime_original)
-            self.file_datetime_orig_list.append(file_datetime)
+            file_datetime_orig_list.append(file_datetime)
+        return file_datetime_orig_list
 
     def decide_datetime_original(self, day_inputed: pd.Timestamp) -> pd.Timestamp:
         """撮影日時を決定する"""
